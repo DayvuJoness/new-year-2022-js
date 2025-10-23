@@ -1,0 +1,169 @@
+.land {
+  .scroll-list, .slider .slider__list .slider__slide {
+    .scroll-list__item, .slider__item {
+      padding: 0;
+
+      // Z-index classes
+      &--z-top {
+        z-index: 2;
+      }
+      &--z-bottom {
+        z-index: 1;
+      }
+    }
+  }
+
+  // Styles for .scroll-list
+  .scroll-list {
+    gap: 15px;
+
+    .scroll-list__item {
+      // First and Last item margins
+      &:nth-child(1) {
+        margin-left: 15px;
+      }
+      &:nth-last-child(1) {
+        margin-right: 15px;
+      }
+
+      // Default item size (not big)
+      &:not(.scroll-list__item--size-big) {
+        position: relative;
+        width: 174px;
+        max-width: 174px;
+        min-width: 174px;
+        height: 466px;
+        overflow: visible;
+      }
+
+      // Big item size
+      &.scroll-list__item--size-big {
+        position: relative;
+        width: 369px;
+        max-width: 369px;
+        min-width: 369px;
+        height: 466px;
+        overflow: visible;
+      }
+
+      // Image styles
+      img {
+        position: absolute;
+        width: auto;
+        height: 466px;
+      }
+
+      // Image position
+      &.scroll-list__item--position-right img {
+        right: 0;
+      }
+      &.scroll-list__item--position-center img {
+        right: -7.5px;
+      }
+    }
+
+    // Suits modifier for scroll-list
+    &.scroll-list--suits .scroll-list__item--size-big-desktop {
+      margin-left: 35px;
+    }
+  }
+  // End of .scroll-list styles
+
+  // Styles for .slider
+  .slider {
+    .slider__slide {
+      gap: 2%;
+
+      .slider__item {
+        // Default item size (not big)
+        &:not(.slider__item--size-big) {
+          position: relative;
+          width: 18%;
+          max-width: 50vw;
+          height: 29vw;
+          max-height: 500px;
+          overflow: visible;
+        }
+
+        // Big item size
+        &.slider__item--size-big {
+          position: relative;
+          width: 40%;
+          max-width: 50vw;
+          height: 29vw;
+          max-height: 500px;
+          overflow: visible;
+        }
+
+        // Image styles
+        img {
+          position: absolute;
+          width: auto;
+          height: 29vw;
+          max-height: 500px;
+        }
+
+        // Image position
+        &.slider__item--position-left img {
+          left: 3%;
+        }
+        &.slider__item--position-right img {
+          right: 0;
+        }
+        &.slider__item--position-center img {
+          right: -1%;
+        }
+      }
+    }
+  }
+  // End of .slider styles
+
+  // Media Query
+  @media (min-width: 768px) {
+    .scroll-list {
+      gap: 2.5%;
+
+      // Suits modifier for scroll-list
+      &.scroll-list--suits {
+        .scroll-list__item--size-big-desktop {
+          margin-left: 15px;
+        }
+        // The empty rule `.land .scroll-list.scroll-list--suits` was removed as it's invalid CSS/SCSS
+      }
+
+      .scroll-list__item {
+        // Default item size for desktop (not big and not big-desktop)
+        &:not(.scroll-list__item--size-big),
+        &:not(.scroll-list__item--size-big-desktop) {
+          width: 22%;
+          max-width: 22%;
+          min-width: 22%;
+          height: 25vw;
+          max-height: 493px;
+        }
+
+        // Big item size for desktop
+        &.scroll-list__item--size-big,
+        &.scroll-list__item--size-big-desktop {
+          width: 60%;
+          max-width: 60%;
+          min-width: 60%;
+          height: 25vw;
+          max-height: 493px;
+        }
+
+        // Image styles for desktop
+        img {
+          position: absolute;
+          width: auto;
+          max-height: 493px; // Note: height is no longer explicitly set, relying on the max-height/container height
+        }
+
+        // Image position for desktop
+        &.scroll-list__item--position-left img {
+          left: 1.5%;
+        }
+      }
+    }
+  }
+}
