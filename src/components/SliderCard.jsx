@@ -1,17 +1,17 @@
-// src/components/SliderCard.jsx
-
 import React from 'react';
+import classNames from 'classnames';
 
 /**
- * Компонент карточки для списка прокрутки (.slider-list__item)
- * * @param {object} props - Свойства компонента
- * @param {string} props.link - Ссылка карточки
- * @param {string} props.alt - Alt-текст изображения
- * @param {string} props.srcMobile - Путь к изображению для мобильных устройств
- * @param {string} props.srcDesktop - Путь к изображению для десктопа
- * @param {string} [props.sizeSlider] - Модификатор размера (например, 'size-big')
- * @param {string} [props.positionSlider] - Модификатор позиции (например, 'position-center')
- * @param {string} [props.zIndex] - Модификатор z-index (например, 'z-top')
+ * Card component for slider (.slider-list__item)
+ * @param {object} props - Component properties
+ * @param {string} props.link - Card link
+ * @param {string} props.alt - Image alt-text
+ * @param {string} props.srcMobile - Source for mobile images
+ * @param {string} props.srcDesktop - Source for desktop images
+ * @param {string} [props.sizeSlider] - Size modificator
+ * @param {string} [props.positionSlider] - Relative position modificator
+ * @param {string} [props.zIndex] - Z-index modificator
+ * @param {string} [props.tabIndexNumber] - Tab key focus index, -1 - excluding from focus for hidden slides
  */
 function SliderCard({ 
     link, 
@@ -20,26 +20,32 @@ function SliderCard({
     srcDesktop, 
     sizeSlider, 
     positionSlider, 
-    zIndex 
+    zIndex,
+    tabIndexNumber
 }) {
-    // 1. Динамическое формирование строки классов
-    // Мы собираем базовый класс и все переданные модификаторы
-    const baseClass = 'slider__item';
-    const classNames = `${baseClass} 
-        ${sizeSlider ? `${baseClass}--size-${sizeSlider}` : ''}
-        ${positionSlider ? `${baseClass}--position-${positionSlider}` : ''}
-        ${zIndex ? `${baseClass}--${zIndex}` : ''}
-    `.trim();
+    const classString = classNames(
+        'slider__item',
+        {
+            [`slider__item--size-${sizeSlider}`]: sizeSlider, 
+            [`slider__item--position-${positionSlider}`]: positionSlider, 
+            [`slider__item--z-${zIndex}`]: zIndex, 
+        }
+    );
 
     return (
-        <a href={link} className={classNames}>
+        <a 
+            href={link} 
+            className={classString} 
+            tabIndex={tabIndexNumber} 
+            draggable="false"
+        >
             <picture>
-                {/* 2. Адаптивное изображение (как в вашем HTML) */}
+                {/* 2. Adaptive image */}
                 <source media="(min-width: 768px)" srcSet={srcDesktop} />
-                <img src={srcMobile} alt={alt} />
+                <img src={srcMobile} alt={alt} loading="lazy" />
             </picture>
         </a>
     );
 }
 
-export default SliderCard;
+export default React.memo(SliderCard);

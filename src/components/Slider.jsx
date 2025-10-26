@@ -1,93 +1,45 @@
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React from 'react';
+import useSliderLogic from '../utils/useSliderLogic';
 import SliderCard from './SliderCard';
 
 function Slider({ listType, data }) {
-    const groupedSlides = useMemo(() => {
-        const map = new Map();
-        data.forEach(item => {
-            const num = item.slideNumber;
-            if (typeof num !== 'number' || num < 1) return;
-            if (!map.has(num)) map.set(num, []);
-            map.get(num).push(item);
-        });
-        return Array.from(map.keys())
-            .sort((a, b) => a - b)
-            .map(key => map.get(key));
-    }, [data]);
+    // === Use a custom hook for all logic ===
+    const {
+        sliderRef,
+        extendedSlides,
+        groupedSlides,
+        totalSlides,
+        activeIndex,
+        prevIndex,
+        isLocked,
+        dragOffset,
+        displayIndex,
+        isDragging,
+        goToNext,
+        goToPrev,
+        goToSlide,
+    } = useSliderLogic(data);
 
-    const totalSlides = groupedSlides.length;
+    // If there are less than or equal to 1 slide, the hook will return totalSlides: 0
     if (totalSlides <= 1) return null;
 
-    // Расширяем массив для бесконечной прокрутки
-    const extendedSlides = [
-        groupedSlides[totalSlides - 1],
-        ...groupedSlides,
-        groupedSlides[0],
-    ];
-
-    const [activeIndex, setActiveIndex] = useState(1);
-    const [prevIndex, setPrevIndex] = useState(0);
-    const [isLocked, setIsLocked] = useState(false);
-    const sliderRef = useRef(null);
-
-    const displayIndex = activeIndex === 0
-        ? totalSlides
-        : activeIndex === totalSlides + 1
-        ? 1
-        : activeIndex;
-
-    const handleTransitionEnd = useCallback(() => {
-        setIsLocked(false);
-
-        // Если достигли "клонированного" слайда, быстро возвращаемся на оригинал
-        if (activeIndex === extendedSlides.length - 1) {
-            requestAnimationFrame(() => setActiveIndex(1));
-        } else if (activeIndex === 0) {
-            requestAnimationFrame(() => setActiveIndex(totalSlides));
-        }
-    }, [activeIndex, extendedSlides.length, totalSlides]);
-
-    useEffect(() => {
-        const slider = sliderRef.current;
-        if (!slider) return;
-
-        const onTransitionEnd = e => {
-            // фильтруем события от дочерних элементов
-            if (e.target === slider) handleTransitionEnd();
-        };
-
-        slider.addEventListener('transitionend', onTransitionEnd);
-        return () => slider.removeEventListener('transitionend', onTransitionEnd);
-    }, [handleTransitionEnd]);
-
-    const goToNext = useCallback(() => {
-        if (isLocked) return;
-        setPrevIndex(activeIndex);
-        setActiveIndex(prev => prev + 1);
-        setIsLocked(true);
-    }, [isLocked, activeIndex]);
-
-    const goToPrev = useCallback(() => {
-        if (isLocked) return;
-        setPrevIndex(activeIndex);
-        setActiveIndex(prev => prev - 1);
-        setIsLocked(true);
-    }, [isLocked, activeIndex]);
-
-    const goToSlide = useCallback(
-        index => {
-            if (isLocked || index === activeIndex) return;
-            setPrevIndex(activeIndex);
-            setActiveIndex(index);
-            setIsLocked(true);
-        },
-        [isLocked, activeIndex]
-    );
+    // Slide List Styles
+    const listStyle = {
+        display: 'flex',
+        // Using Active Indexed Offset and Drag Offset
+        transform: `translateX(calc(-${activeIndex * 55}% + ${dragOffset}px))`,
+        // Animation only on transition, not on drag
+        transition: isLocked
+            ? 'transform 0.8s cubic-bezier(.77,0,.175,1)'
+            : 'none',
+        cursor: isLocked ? 'default' : isDragging ? 'grabbing' : 'grab',
+    };
 
     return (
         <div className={`slider slider--${listType}`}>
             <div className="slider__container">
 
+                {/* Nav buttons */}
                 <button
                     className={`slider__nav-btn slider__nav-btn--left ${isLocked ? 'disabled' : ''}`}
                     onClick={goToPrev}
@@ -102,29 +54,26 @@ function Slider({ listType, data }) {
                     disabled={isLocked}
                 />
 
+                {/* The main viewing area of ​​the slider */}
                 <div className="slider__viewport-wrapper">
                     <div className="slider__viewport">
                         <div
                             className="slider__list"
                             ref={sliderRef}
-                            style={{
-                                display: 'flex',
-                                transform: `translateX(-${activeIndex * 55}%)`,
-                                transition: isLocked
-                                    ? 'transform 0.8s cubic-bezier(.77,0,.175,1)'
-                                    : 'none',
-                            }}
+                            style={listStyle}
                         >
+                            {/* Render all advanced slides */}
                             {extendedSlides.map((slideItems, index) => {
                                 const isActive = index === activeIndex;
                                 const isPrev = index === prevIndex;
 
-                                // Флаг — мы сейчас "в моменте перескока" с клона на оригинал
+                                const tabIndexValue = isActive ? 0 : -1;
+
+                                // Visibility logic for cloned slides when looping
                                 const isJumpCloneToOriginal =
                                     (activeIndex === 1 && prevIndex === extendedSlides.length - 1) ||
                                     (activeIndex === totalSlides && prevIndex === 0);
 
-                                // === Основная логика прозрачности ===
                                 const shouldBeVisible =
                                     isActive ||
                                     (isJumpCloneToOriginal && (index === 1 || index === totalSlides));
@@ -146,17 +95,18 @@ function Slider({ listType, data }) {
 
                                 return (
                                     <div key={index} className={classes} style={slideStyle}>
+                                        {/* Rendering each card within a slide */}
                                         {slideItems.map(card => (
-                                            <SliderCard key={card.id} {...card} />
+                                            <SliderCard key={card.id} {...card} tabIndexNumber={tabIndexValue} />
                                         ))}
                                     </div>
                                 );
                             })}
-
                         </div>
                     </div>
                 </div>
 
+                {/* Nav points (Dots) */}
                 <div className="slider__dots">
                     {groupedSlides.map((_, i) => (
                         <button
@@ -164,6 +114,7 @@ function Slider({ listType, data }) {
                             aria-label={`Go to slide ${i + 1}`}
                             className={`slider__dot ${i + 1 === displayIndex ? 'slider__dot--active' : ''}`}
                             aria-current={i + 1 === displayIndex ? 'true' : undefined}
+                            // Pass the index of the original slide (i + 1)
                             onClick={() => goToSlide(i + 1)}
                             disabled={isLocked}
                         />

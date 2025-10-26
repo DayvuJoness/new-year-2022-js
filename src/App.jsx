@@ -1,29 +1,31 @@
 import React from 'react';
-// Импортируем данные заголовков и секций
 import { titleData } from './data/titles';
 import { foodData, moodData, giftsData, suitsData } from './data/sections';
-// Импортируем стили SCSS
-import './styles/mainNew.scss'; 
+
+// --- SCSS ---
+import './styles/main.scss'; 
 import './styles/customization.scss'; 
 
-// --- Компоненты ---
-// Реальный компонент списка (для мобильных устройств)
-import ScrollList from './components/ScrollList'; 
-// Новый компонент слайдера (для десктопных устройств)
-import Slider from './components/Slider'; 
-import SectionTitle from './components/SectionTitle'; // Компонент заголовка
+// --- Components ---
+import ScrollList from './components/ScrollList';       // ScrollList component (mobile)
+import Slider from './components/Slider';               // Slider component (desktop)
+import SectionTitle from './components/SectionTitle';   // Title component
 
-// Вспомогательный компонент для декоративных div'ов
+import useMediaQuery from './utils/useMediaQuery';
+
+// --- Decorations component ---
 const Decorations = ({ classNames }) => <div className={`land__decor ${classNames}`}></div>;
 
 // --------------------------------------------------------
 
 function App() {
+    const isDesktop = useMediaQuery('(min-width: 768px)'); 
+    const isMobile = !isDesktop;
     return (
         <div className="land">
             
             {/* ======================================= */}
-            {/* Секция 1: Food ("Накрываем на стол") */}
+            {/* Section 1: Food ("Накрываем на стол") */}
             {/* ======================================= */}
             <section className="land__section land__section--food">
                 <Decorations classNames="land__decor--stars-left" />
@@ -41,18 +43,18 @@ function App() {
                     </p>
                 </div>
                 
-                {/* 1. Скролл-список (видимость управляется SCSS) */}
-                <ScrollList listType="food" data={foodData} />
+                {/* 1. Scroller (mobile) */}
+                {isMobile && <ScrollList listType="food" data={foodData} loading="eager" />}
                 
-                {/* 2. Слайдер на React (видимость управляется SCSS) */}
-                <Slider listType="food" data={foodData} />
+                {/* 2. Slider (desktop) */}
+                {isDesktop && <Slider listType="food" data={foodData} loading="eager" />}
                 
                 <Decorations classNames="land__decor--arrow-down-red" />
             </section>
 
 
             {/* ======================================= */}
-            {/* Секция 2: Mood ("Дарим с удовольствием!") */}
+            {/* Section 2: Mood ("Дарим с удовольствием!") */}
             {/* ======================================= */}
             <section className="land__section land__section--mood">
                 <Decorations classNames="land__decor--snows-left" />
@@ -66,12 +68,12 @@ function App() {
                         Где скрывается новогоднее волшебство? Конечно, в подарках! У нас вы легко найдёте всё, что ваши родные с радостью найдут под елкой!
                     </p>
                 </div>
+
+                {/* 1. Scroller (mobile) */}
+                {isMobile && <ScrollList listType="mood" data={moodData} />}
                 
-                {/* 1. Скролл-список (видимость управляется SCSS) */}
-                <ScrollList listType="mood" data={moodData} />
-                
-                {/* 2. Слайдер на React (видимость управляется SCSS) */}
-                <Slider listType="mood" data={moodData} />
+                {/* 2. Slider (desktop) */}
+                {isDesktop && <Slider listType="mood" data={moodData} />}
                 
                 <Decorations classNames="land__decor--arrow-down-green" />
             </section>
@@ -94,12 +96,12 @@ function App() {
                         Праздник Нового года приходит в каждый дом. Но ещё быстрее он приходит в дом, где уже царит новогодняя атмосфера! Пусть ваша елка будет в центре внимания, а интерьер светится радостью!
                     </p>
                 </div>
+
+                {/* 1. Scroller (mobile) */}
+                {isMobile && <ScrollList listType="gifts" data={giftsData} />}
                 
-                {/* 1. Скролл-список (видимость управляется SCSS) */}
-                <ScrollList listType="gifts" data={giftsData} />
-                
-                {/* 2. Слайдер на React (видимость управляется SCSS) */}
-                <Slider listType="gifts" data={giftsData} />
+                {/* 2. Slider (desktop) */}
+                {isDesktop && <Slider listType="gifts" data={giftsData} />}
                 
                 <Decorations classNames="land__decor--nutcracker" />
                 <Decorations classNames="land__decor--arrow-down-red" />
@@ -123,15 +125,11 @@ function App() {
                     </p>
                 </div>
 
-                {/* У секции Suits есть дополнительная обертка для декоративных гирлянд */}
                 <div className="land__section__scroll-wrapper"> 
                     <Decorations classNames="land__decor--garland-left" />
                     
-                    {/* 1. Скролл-список (видимость управляется SCSS) */}
+                    {/* 1. Scroller (mobile & desktop) */}
                     <ScrollList listType="suits" data={suitsData} /> 
-                    
-                    {/* 2. Слайдер на React (видимость управляется SCSS) */}
-                    {/* <Slider listType="suits" data={suitsData} />  */}
                     
                     <Decorations classNames="land__decor--garland-right" />
                 </div>

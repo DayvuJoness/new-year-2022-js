@@ -1,17 +1,17 @@
-// src/components/ScrollCard.jsx
-
 import React from 'react';
+import classNames from 'classnames'; 
 
 /**
- * Компонент карточки для списка прокрутки (.scroll-list__item)
- * * @param {object} props - Свойства компонента
- * @param {string} props.link - Ссылка карточки
- * @param {string} props.alt - Alt-текст изображения
- * @param {string} props.srcMobile - Путь к изображению для мобильных устройств
- * @param {string} props.srcDesktop - Путь к изображению для десктопа
- * @param {string} [props.size] - Модификатор размера (например, 'size-big')
- * @param {string} [props.position] - Модификатор позиции (например, 'position-center')
- * @param {string} [props.zIndex] - Модификатор z-index (например, 'z-top')
+ * Card component for scroller (.scroll-list__item)
+ * @param {object} props - Component properties
+ * @param {string} props.link - Card link
+ * @param {string} props.alt - Image alt-text
+ * @param {string} props.srcMobile - Source for mobile images
+ * @param {string} props.srcDesktop - Source for desktop images
+ * @param {string} [props.size] - Size modificator
+ * @param {string} [props.position] - Relative position modificator
+ * @param {string} [props.zIndex] - Z-index modificator
+ * @param {string} [props.loading] - Loading strategy: 'eager' or 'lazy'. Default: undefined (browser default)
  */
 function ScrollCard({ 
     link, 
@@ -20,26 +20,27 @@ function ScrollCard({
     srcDesktop, 
     size, 
     position, 
-    zIndex 
+    zIndex,
+    loading
 }) {
-    // 1. Динамическое формирование строки классов
-    // Мы собираем базовый класс и все переданные модификаторы
-    const baseClass = 'scroll-list__item';
-    const classNames = `${baseClass} 
-        ${size ? `${baseClass}--size-${size}` : ''}
-        ${position ? `${baseClass}--position-${position}` : ''}
-        ${zIndex ? `${baseClass}--${zIndex}` : ''}
-    `.trim();
+    const classString = classNames(
+        'scroll-list__item',
+        {
+            [`scroll-list__item--size-${size}`]: size,
+            [`scroll-list__item--position-${position}`]: position,
+            [`scroll-list__item--z-${zIndex}`]: zIndex,
+        }
+    );
 
     return (
-        <a href={link} className={classNames}>
+        <a href={link} className={classString}>
             <picture>
-                {/* 2. Адаптивное изображение (как в вашем HTML) */}
+                {/* 2. Adaptive image */}
                 <source media="(min-width: 768px)" srcSet={srcDesktop} />
-                <img src={srcMobile} alt={alt} />
+                <img src={srcMobile} alt={alt} {...(loading && { loading: loading })} />
             </picture>
         </a>
     );
 }
 
-export default ScrollCard;
+export default React.memo(ScrollCard);

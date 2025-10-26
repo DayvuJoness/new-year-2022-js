@@ -1,5 +1,3 @@
-// src/data/sections.js
-
 // FOOD
 import img21m from '../assets/img/21_m.png';
 import img21 from '../assets/img/21.png';
@@ -41,7 +39,7 @@ import img18 from '../assets/img/18.png';
 import img19 from '../assets/img/19.png';
 import img20 from '../assets/img/20.png';
 
-// --- Данные для секции "Накрываем на стол" (Food)
+// --- Section data "Накрываем на стол" (Food)
 export const foodData = [
     { id: 1, slideNumber: 1, link: "#", alt: "Колбасные изделия", srcMobile: img21m, srcDesktop: img21, sizeSlider: 'big', position: 'right', positionSlider: 'center' },
     { id: 2, slideNumber: 1, link: "#", alt: "Молоко, сыр, яйца", srcMobile: img22, srcDesktop: img22 },
@@ -53,7 +51,7 @@ export const foodData = [
     { id: 8, slideNumber: 2, link: "#", alt: "Торты, пирожные", srcMobile: img28, srcDesktop: img28 },
 ];
 
-// --- Данные для секции "Дарим с удовольствием!" (Mood)
+// --- Section data "Дарим с удовольствием!" (Mood)
 export const moodData = [
     { id: 1, slideNumber: 1, link: "#", alt: "Сладкие подарки", srcMobile: img10, srcDesktop: img10, position: 'center' },
     { id: 2, slideNumber: 1, link: "#", alt: "Игрушки", srcMobile: img11m, srcDesktop: img11, positionSlider: 'left', sizeSlider: 'big' },
@@ -65,7 +63,7 @@ export const moodData = [
     { id: 8, slideNumber: 2, link: "#", alt: "Подарочная упаковка", srcMobile: img17, srcDesktop: img17 },
 ];
 
-// --- Данные для секции "Украшаем дом" (Gifts)
+// --- Section data "Украшаем дом" (Gifts)
 export const giftsData = [
     { id: 1, slideNumber: 1, link: "#", alt: "Новогодние коллекции 2022", srcMobile: img1_gifts, srcDesktop: img1_gifts, size: 'big', sizeSlider: 'big' },
     { id: 2, slideNumber: 1, link: "#", alt: "Ёлки", srcMobile: img2_gifts, srcDesktop: img2_gifts },
@@ -78,7 +76,7 @@ export const giftsData = [
     { id: 9, slideNumber: 2, link: "#", alt: "Посуда", srcMobile: img9, srcDesktop: img9 },
 ];
 
-// --- Данные для секции "Костюмы" (Suits)
+// --- Section data "Костюмы" (Suits)
 export const suitsData = [
     { id: 1, slideNumber: 1, link: "#", alt: "Костюмы", srcMobile: img18m2, srcDesktop: img18, positionSlider: 'right', position: 'right', size: 'big-desktop' },
     { id: 2, slideNumber: 1, link: "#", alt: "Аксессуары для карнавала", srcMobile: img19, srcDesktop: img19, zIndex: 'z-top', positionSlider: 'left' },

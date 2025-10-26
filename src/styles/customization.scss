@@ -128,7 +128,6 @@
         .scroll-list__item--size-big-desktop {
           margin-left: 15px;
         }
-        // The empty rule `.land .scroll-list.scroll-list--suits` was removed as it's invalid CSS/SCSS
       }
 
       .scroll-list__item {
@@ -156,7 +155,7 @@
         img {
           position: absolute;
           width: auto;
-          max-height: 493px; // Note: height is no longer explicitly set, relying on the max-height/container height
+          max-height: 493px;
         }
 
         // Image position for desktop

@@ -1,19 +1,15 @@
-// src/components/ScrollList.jsx
-
 import React from 'react';
 import ScrollCard from './ScrollCard';
 
 /**
- * Компонент-контейнер для списка прокрутки (.scroll-list)
- * * @param {string} listType - Модификатор для типа списка (например, 'suits', 'food')
- * @param {Array} data - Массив данных для карточек
+ * Container component for a scrolling list (.scroll-list)
+ * @param {string} listType - Modifier for list type
+ * @param {Array} data - Data array for cards
+ * @param {string} [props.loading] - Loading strategy for child cards
  */
-function ScrollList({ listType, data }) {
+function ScrollList({ listType, data, loading }) {
     
     const containerClass = `scroll-list scroll-list--${listType}`;
-
-    // В вашем исходном HTML вокруг списка прокрутки были декоративные элементы.
-    // Если они нужны, их можно добавить здесь или в родительском компоненте (Section).
     
     return (
         <div className={containerClass}>
@@ -22,12 +18,12 @@ function ScrollList({ listType, data }) {
                     key={card.id} 
                     link={card.link}
                     alt={card.alt}
-                    // Передаем переменные, содержащие пути к изображениям
                     srcMobile={card.srcMobile} 
                     srcDesktop={card.srcDesktop}
                     size={card.size}
                     position={card.position}
                     zIndex={card.zIndex}
+                    loading={loading}
                 />
             ))}
         </div>
