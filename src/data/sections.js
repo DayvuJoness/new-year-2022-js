@@ -21,161 +21,222 @@ export function extractMeta(mobileMeta, desktopMeta) {
     };
 }
 
-// FOOD
-import img21m_meta from '../assets/img/21_m.png?format=png;webp;avif&meta';
-import img21_meta from '../assets/img/21.png?format=png;webp;avif&meta';
-import img22_meta from '../assets/img/22.png?format=png;webp;avif&meta';
-import img23_meta from '../assets/img/23.png?format=png;webp;avif&meta';
-import img24_meta from '../assets/img/24.png?format=png;webp;avif&meta';
-import img25_meta from '../assets/img/25.png?format=png;webp;avif&meta';
-import img26m_meta from '../assets/img/26_m.png?format=png;webp;avif&meta';
-import img26_meta from '../assets/img/26.png?format=png;webp;avif&meta';
-import img27_meta from '../assets/img/27.png?format=png;webp;avif&meta';
-import img28_meta from '../assets/img/28.png?format=png;webp;avif&meta';
+// Use a simple template to get the import functions
+const imageImportFns = import.meta.glob('../assets/img/*.png'); 
+const imageKeys = Object.keys(imageImportFns);
 
-// MOOD
-import img10_meta from '../assets/img/10.png?format=png;webp;avif&meta';
-import img11m_meta from '../assets/img/11_m.png?format=png;webp;avif&meta';
-import img11_meta from '../assets/img/11.png?format=png;webp;avif&meta';
-import img12_meta from '../assets/img/12.png?format=png;webp;avif&meta';
-import img13_meta from '../assets/img/13.png?format=png;webp;avif&meta';
-import img14_meta from '../assets/img/14.png?format=png;webp;avif&meta';
-import img15_1_meta from '../assets/img/15-1.png?format=png;webp;avif&meta';
-import img16m_meta from '../assets/img/16_m.png?format=png;webp;avif&meta';
-import img16_meta from '../assets/img/16.png?format=png;webp;avif&meta';
-import img17_meta from '../assets/img/17.png?format=png;webp;avif&meta';
+/**
+ * Asynchronous function for searching and retrieving metadata
+ * @param {string} filename - File name
+ * @returns {Array|undefined} An array of metadata, or undefined if the file is not found
+ */
+async function getMeta(filename) {
+    // 1. We find the key (path) corresponding to the file
+    const fullKey = imageKeys.find(key => key.endsWith(`/${filename}`));
 
-// GIFTS
-import img1_gifts_meta from '../assets/img/1.png?format=png;webp;avif&meta';
-import img2_gifts_meta from '../assets/img/2.png?format=png;webp;avif&meta';
-import img3_meta from '../assets/img/3.png?format=png;webp;avif&meta';
-import img4_meta from '../assets/img/4.png?format=png;webp;avif&meta';
-import img5_meta from '../assets/img/5.png?format=png;webp;avif&meta';
-import img6_meta from '../assets/img/6.png?format=png;webp;avif&meta';
-import img7_meta from '../assets/img/7.png?format=png;webp;avif&meta';
-import img8_meta from '../assets/img/8.png?format=png;webp;avif&meta';
-import img9_meta from '../assets/img/9.png?format=png;webp;avif&meta';
+    if (!fullKey) {
+        console.error(`[Vite Glob Error] File not found for: ${filename}.`);
+        return undefined; 
+    }
 
-// SUITS
-import img18m2_meta from '../assets/img/18_m2.png?format=png;webp;avif&meta';
-import img18_meta from '../assets/img/18.png?format=png;webp;avif&meta';
-import img19_meta from '../assets/img/19.png?format=png;webp;avif&meta';
-import img20_meta from '../assets/img/20.png?format=png;webp;avif&meta';
+    // 2. Add query parameters to the found key.
+    // When dynamically importing, Vite understands that a plugin needs to be used.
+    const importKeyWithMeta = `${fullKey}?format=png;webp;avif&meta`;
+    
+    // 3. Dynamically import the file with metadata.
+    try {
+        const importFn = imageImportFns[fullKey];
+        // Use /* @vite-ignore */ to suppress the Vite static analyzer warning
+        const module = await importFn(/* @vite-ignore */ importKeyWithMeta);
+        
+        // Metadata is stored in the .default field
+        return module.default;
+    } catch (error) {
+        console.error(`[Vite Glob Error] Failed to import metadata for ${filename} with query params:`, error);
+        return undefined;
+    }
+}
 
+export async function loadSectionData() {
+    // Use Promise.all to download all images in parallel
+    const foodPromises = [
+        getMeta('21_m.png'), getMeta('21.png'),
+        getMeta('22.png'), getMeta('22.png'),
+        getMeta('23.png'), getMeta('23.png'),
+        getMeta('24.png'), getMeta('24.png'),
+        getMeta('25.png'), getMeta('25.png'),
+        getMeta('26_m.png'), getMeta('26.png'),
+        getMeta('27.png'), getMeta('27.png'),
+        getMeta('28.png'), getMeta('28.png'),
+    ];
+    
+    const moodPromises = [
+        getMeta('10.png'), getMeta('10.png'),
+        getMeta('11_m.png'), getMeta('11.png'),
+        getMeta('12.png'), getMeta('12.png'),
+        getMeta('13.png'), getMeta('13.png'),
+        getMeta('14.png'), getMeta('14.png'),
+        getMeta('15-1.png'), getMeta('15-1.png'),
+        getMeta('16_m.png'), getMeta('16.png'),
+        getMeta('17.png'), getMeta('17.png'),
+    ];
 
+    const giftsPromises = [
+        getMeta('1.png'), getMeta('1.png'),
+        getMeta('2.png'), getMeta('2.png'),
+        getMeta('3.png'), getMeta('3.png'),
+        getMeta('4.png'), getMeta('4.png'),
+        getMeta('5.png'), getMeta('5.png'),
+        getMeta('6.png'), getMeta('6.png'),
+        getMeta('7.png'), getMeta('7.png'),
+        getMeta('8.png'), getMeta('8.png'),
+        getMeta('9.png'), getMeta('9.png'),
+    ];
 
-// --- Section data "Накрываем на стол" (Food)
-export const foodData = [
-    { id: 1, slideNumber: 1, link: "#", alt: "Колбасные изделия", 
-        ...extractMeta(img21m_meta, img21_meta),
-        sizeSlider: 'big', position: 'right', positionSlider: 'center' 
-    },
-    { id: 2, slideNumber: 1, link: "#", alt: "Молоко, сыр, яйца", 
-        ...extractMeta(img22_meta, img22_meta),
-    },
-    { id: 3, slideNumber: 1, link: "#", alt: "Овощи, фрукты, зелень, грибы, ягоды", 
-        ...extractMeta(img23_meta, img23_meta),
-        zIndex: 'z-top' 
-    },
-    { id: 4, slideNumber: 1, link: "#", alt: "Рыба, икра, морепродукты", 
-        ...extractMeta(img24_meta, img24_meta),
-        zIndex: 'z-bottom' 
-    },
-    { id: 5, slideNumber: 2, link: "#", alt: "Вода, соки, напитки", 
-        ...extractMeta(img25_meta, img25_meta) 
-    },
-    { id: 6, slideNumber: 2, link: "#", alt: "Кулинария", 
-        ...extractMeta(img26m_meta, img26_meta),
-        sizeSlider: 'big' 
-    },
-    { id: 7, slideNumber: 2, link: "#", alt: "Хлебная выпечка", 
-        ...extractMeta(img27_meta, img27_meta) 
-    },
-    { id: 8, slideNumber: 2, link: "#", alt: "Торты, пирожные", 
-        ...extractMeta(img28_meta, img28_meta) 
-    },
-];
+    const suitsPromises = [
+        getMeta('18_m2.png'), getMeta('18.png'),
+        getMeta('19.png'), getMeta('19.png'),
+        getMeta('20.png'), getMeta('20.png'),
+    ];
+    
+    const [
+        foodMeta, moodMeta, giftsMeta, suitsMeta
+    ] = await Promise.all([
+        Promise.all(foodPromises),
+        Promise.all(moodPromises),
+        Promise.all(giftsPromises),
+        Promise.all(suitsPromises),
+    ]);
 
-// --- Section data "Дарим с удовольствием!" (Mood)
-export const moodData = [
-    { id: 1, slideNumber: 1, link: "#", alt: "Сладкие подарки", 
-        ...extractMeta(img10_meta, img10_meta),
-        position: 'center' 
-    },
-    { id: 2, slideNumber: 1, link: "#", alt: "Игрушки", 
-        ...extractMeta(img11m_meta, img11_meta),
-        positionSlider: 'left', sizeSlider: 'big' 
-    },
-    { id: 3, slideNumber: 1, link: "#", alt: "Портативная техника и гаджеты", 
-        ...extractMeta(img12_meta, img12_meta) 
-    },
-    { id: 4, slideNumber: 1, link: "#", alt: "Бытовая техника", 
-        ...extractMeta(img13_meta, img13_meta),
-        zIndex: 'z-top' 
-    },
-    { id: 5, slideNumber: 2, link: "#", alt: "Подарочные наборы косметики", 
-        ...extractMeta(img14_meta, img14_meta),
-        zIndex: 'z-bottom' 
-    },
-    { id: 6, slideNumber: 2, link: "#", alt: "Товары для дома", 
-        ...extractMeta(img15_1_meta, img15_1_meta),
-        positionSlider: 'left' 
-    },
-    { id: 7, slideNumber: 2, link: "#", alt: "Символ года", 
-        ...extractMeta(img16m_meta, img16_meta),
-        sizeSlider: 'big', positionSlider: 'left' 
-    },
-    { id: 8, slideNumber: 2, link: "#", alt: "Подарочная упаковка", 
-        ...extractMeta(img17_meta, img17_meta) 
-    },
-];
+    // ----------------------------------------------------
+    // --- Section data "Накрываем на стол" (Food)
+    // ----------------------------------------------------
+    const foodData = [
+        { id: 1, slideNumber: 1, link: "#", alt: "Колбасные изделия", 
+            ...extractMeta(foodMeta[0], foodMeta[1]),
+            sizeSlider: 'big', position: 'right', positionSlider: 'center' 
+        },
+        { id: 2, slideNumber: 1, link: "#", alt: "Молоко, сыр, яйца", 
+            ...extractMeta(foodMeta[2], foodMeta[3]),
+        },
+        { id: 3, slideNumber: 1, link: "#", alt: "Овощи, фрукты, зелень, грибы, ягоды", 
+            ...extractMeta(foodMeta[4], foodMeta[5]),
+            zIndex: 'top' 
+        },
+        { id: 4, slideNumber: 1, link: "#", alt: "Рыба, икра, морепродукты", 
+            ...extractMeta(foodMeta[6], foodMeta[7]),
+            zIndex: 'bottom' 
+        },
+        { id: 5, slideNumber: 2, link: "#", alt: "Вода, соки, напитки", 
+            ...extractMeta(foodMeta[8], foodMeta[9]) 
+        },
+        { id: 6, slideNumber: 2, link: "#", alt: "Кулинария", 
+            ...extractMeta(foodMeta[10], foodMeta[11]),
+            sizeSlider: 'big' 
+        },
+        { id: 7, slideNumber: 2, link: "#", alt: "Хлебная выпечка", 
+            ...extractMeta(foodMeta[12], foodMeta[13]) 
+        },
+        { id: 8, slideNumber: 2, link: "#", alt: "Торты, пирожные", 
+            ...extractMeta(foodMeta[14], foodMeta[15]) 
+        },
+    ];
 
-// --- Section data "Украшаем дом" (Gifts)
-export const giftsData = [
-    { id: 1, slideNumber: 1, link: "#", alt: "Новогодние коллекции 2022", 
-        ...extractMeta(img1_gifts_meta, img1_gifts_meta),
-        size: 'big', sizeSlider: 'big' 
-    },
-    { id: 2, slideNumber: 1, link: "#", alt: "Ёлки", 
-        ...extractMeta(img2_gifts_meta, img2_gifts_meta) 
-    },
-    { id: 3, slideNumber: 1, link: "#", alt: "Шары", 
-        ...extractMeta(img3_meta, img3_meta),
-        zIndex: 'z-top' 
-    },
-    { id: 4, slideNumber: 1, link: "#", alt: "Фигурки на ёлку", 
-        ...extractMeta(img4_meta, img4_meta),
-        zIndex: 'z-bottom' 
-    },
-    { id: 5, slideNumber: 2, link: "#", alt: "Электрогирлянды и световой декор", 
-        ...extractMeta(img5_meta, img5_meta) 
-    },
-    { id: 6, slideNumber: 2, link: "#", alt: "Мишура", 
-        ...extractMeta(img6_meta, img6_meta) 
-    },
-    { id: 7, slideNumber: 2, link: "#", alt: "Новогодние фигурки", 
-        ...extractMeta(img7_meta, img7_meta) 
-    },
-    { id: 8, slideNumber: 2, link: "#", alt: "Декор для дома", 
-        ...extractMeta(img8_meta, img8_meta) 
-    },
-    { id: 9, slideNumber: 2, link: "#", alt: "Посуда", 
-        ...extractMeta(img9_meta, img9_meta) 
-    },
-];
+    // ----------------------------------------------------
+    // --- Section data "Дарим с удовольствием!" (Mood)
+    // ----------------------------------------------------
+    const moodData = [
+        { id: 1, slideNumber: 1, link: "#", alt: "Сладкие подарки", 
+            ...extractMeta(moodMeta[0], moodMeta[1]),
+            position: 'center' 
+        },
+        { id: 2, slideNumber: 1, link: "#", alt: "Игрушки", 
+            ...extractMeta(moodMeta[2], moodMeta[3]),
+            positionSlider: 'left', sizeSlider: 'big' 
+        },
+        { id: 3, slideNumber: 1, link: "#", alt: "Портативная техника и гаджеты", 
+            ...extractMeta(moodMeta[4], moodMeta[5]) 
+        },
+        { id: 4, slideNumber: 1, link: "#", alt: "Бытовая техника", 
+            ...extractMeta(moodMeta[6], moodMeta[7]),
+            zIndex: 'top' 
+        },
+        { id: 5, slideNumber: 2, link: "#", alt: "Подарочные наборы косметики", 
+            ...extractMeta(moodMeta[8], moodMeta[9]),
+            zIndex: 'bottom' 
+        },
+        { id: 6, slideNumber: 2, link: "#", alt: "Товары для дома", 
+            ...extractMeta(moodMeta[10], moodMeta[11]),
+            positionSlider: 'left' 
+        },
+        { id: 7, slideNumber: 2, link: "#", alt: "Символ года", 
+            ...extractMeta(moodMeta[12], moodMeta[13]),
+            sizeSlider: 'big', positionSlider: 'left' 
+        },
+        { id: 8, slideNumber: 2, link: "#", alt: "Подарочная упаковка", 
+            ...extractMeta(moodMeta[14], moodMeta[15]) 
+        },
+    ];
 
-// --- Section data "Костюмы" (Suits)
-export const suitsData = [
-    { id: 1, slideNumber: 1, link: "#", alt: "Костюмы", 
-        ...extractMeta(img18m2_meta, img18_meta),
-        positionSlider: 'right', position: 'right', size: 'big-desktop' 
-    },
-    { id: 2, slideNumber: 1, link: "#", alt: "Аксессуары для карнавала", 
-        ...extractMeta(img19_meta, img19_meta),
-        zIndex: 'z-top', positionSlider: 'left' 
-    },
-    { id: 3, slideNumber: 1, link: "#", alt: "Оборудование для вечеринки", 
-        ...extractMeta(img20_meta, img20_meta),
-        zIndex: 'z-bottom' 
-    },
-];
+    // ----------------------------------------------------
+    // --- Section data "Украшаем дом" (Gifts)
+    // ----------------------------------------------------
+    const giftsData = [
+        { id: 1, slideNumber: 1, link: "#", alt: "Новогодние коллекции 2022", 
+            ...extractMeta(giftsMeta[0], giftsMeta[1]),
+            size: 'big', sizeSlider: 'big' 
+        },
+        { id: 2, slideNumber: 1, link: "#", alt: "Ёлки", 
+            ...extractMeta(giftsMeta[2], giftsMeta[3])
+        },
+        { id: 3, slideNumber: 1, link: "#", alt: "Шары", 
+            ...extractMeta(giftsMeta[4], giftsMeta[5]),
+            zIndex: 'top' 
+        },
+        { id: 4, slideNumber: 1, link: "#", alt: "Фигурки на ёлку", 
+            ...extractMeta(giftsMeta[6], giftsMeta[7]),
+            zIndex: 'bottom' 
+        },
+        { id: 5, slideNumber: 2, link: "#", alt: "Электрогирлянды и световой декор", 
+            ...extractMeta(giftsMeta[8], giftsMeta[9]) 
+        },
+        { id: 6, slideNumber: 2, link: "#", alt: "Мишура", 
+            ...extractMeta(giftsMeta[10], giftsMeta[11]) 
+        },
+        { id: 7, slideNumber: 2, link: "#", alt: "Новогодние фигурки", 
+            ...extractMeta(giftsMeta[12], giftsMeta[13]) 
+        },
+        { id: 8, slideNumber: 2, link: "#", alt: "Декор для дома", 
+            ...extractMeta(giftsMeta[14], giftsMeta[15]) 
+        },
+        { id: 9, slideNumber: 2, link: "#", alt: "Посуда", 
+            ...extractMeta(giftsMeta[16], giftsMeta[17]) 
+        },
+    ];
+
+    // ----------------------------------------------------
+    // --- Section data "Костюмы" (Suits)
+    // ----------------------------------------------------
+    const suitsData = [
+        { id: 1, slideNumber: 1, link: "#", alt: "Костюмы", 
+            ...extractMeta(suitsMeta[0], suitsMeta[1]),
+            positionSlider: 'right', position: 'right', size: 'big-desktop' 
+        },
+        { id: 2, slideNumber: 1, link: "#", alt: "Аксессуары для карнавала", 
+            ...extractMeta(suitsMeta[2], suitsMeta[3]),
+            zIndex: 'top', positionSlider: 'left' 
+        },
+        { id: 3, slideNumber: 1, link: "#", alt: "Оборудование для вечеринки", 
+            ...extractMeta(suitsMeta[4], suitsMeta[5]),
+            zIndex: 'bottom' 
+        },
+    ];
+
+    // Return all the prepared data
+    return { foodData, moodData, giftsData, suitsData };
+}
+
+export const foodData = [];
+export const moodData = [];
+export const giftsData = [];
+export const suitsData = [];

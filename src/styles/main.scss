@@ -465,7 +465,7 @@ main {
                 }
 
                 img {
-                    height: 439px;
+                    height: 466px;
                     width: auto;
                     max-width: 50vh;
                 }
@@ -644,13 +644,17 @@ main {
                 left: auto;
             }
 
+            .land__section.land__section--food &--twig {
+                top: 60%;
+            }
+
             .land__section.land__section--gifts &--twig {
+                top: 70%;
                 display: block;
             }
 
             &--twig {
                 position: absolute;
-                top: 60%;
                 width: 12%;
                 max-width: 190px;
                 left: 0;
@@ -1013,9 +1017,13 @@ main {
 @media (min-width: $breakpoint-extra-large-desktop) {
     .land {
         &__decor {
-            &--arrow-down-red,
-            &--arrow-down-green {
+            &--arrow-down-red {
                 bottom: 3px;
+                left: calc(50% - 81px);
+            }
+
+            &--arrow-down-green {
+                bottom: -46px;
                 left: calc(50% - 81px);
             }
         }
