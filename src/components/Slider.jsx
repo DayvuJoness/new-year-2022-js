@@ -2,7 +2,7 @@ import React from 'react';
 import useSliderLogic from '../utils/useSliderLogic';
 import SliderCard from './SliderCard';
 
-function Slider({ listType, data }) {
+function Slider({ listType, data, loading }) {
     // === Use a custom hook for all logic ===
     const {
         sliderRef,
@@ -26,9 +26,8 @@ function Slider({ listType, data }) {
     // Slide List Styles
     const listStyle = {
         display: 'flex',
-        // Using Active Indexed Offset and Drag Offset
-        transform: `translateX(calc(-${activeIndex * 55}% + ${dragOffset}px))`,
-        // Animation only on transition, not on drag
+        '--active-index': activeIndex,
+        '--drag-offset': `${dragOffset}px`,
         transition: isLocked
             ? 'transform 0.8s cubic-bezier(.77,0,.175,1)'
             : 'none',
@@ -97,7 +96,7 @@ function Slider({ listType, data }) {
                                     <div key={index} className={classes} style={slideStyle}>
                                         {/* Rendering each card within a slide */}
                                         {slideItems.map(card => (
-                                            <SliderCard key={card.id} {...card} tabIndexNumber={tabIndexValue} />
+                                            <SliderCard key={card.id} {...card} tabIndexNumber={tabIndexValue} loading={loading} />
                                         ))}
                                     </div>
                                 );

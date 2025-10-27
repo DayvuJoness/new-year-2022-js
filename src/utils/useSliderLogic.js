@@ -40,7 +40,7 @@ function useSliderLogic(data) {
     const [isLocked, setIsLocked] = useState(false);   // Blocking transitions during animation
     const [dragOffset, setDragOffset] = useState(0);   // Drag Offset
     const startX = useRef(null);                       // Initial X coordinate for dragging
-    const isDragging = useRef(false);                  // Drag flag
+    const [isDragging, setIsDragging] = useState(false);    // Drag flag
     const sliderRef = useRef(null);                    // Reference to the slide list DOM element
 
     // Index for navigation points (Dots)
@@ -100,21 +100,21 @@ function useSliderLogic(data) {
 
     const handleStart = useCallback(e => {
         if (isLocked) return;
-        isDragging.current = true;
+        setIsDragging(true);
         startX.current = e.touches ? e.touches[0].clientX : e.clientX;
     }, [isLocked]);
 
     const handleMove = useCallback(e => {
-        if (!isDragging.current || isLocked) return;
+        if (!isDragging || isLocked) return;
         const currentX = e.touches ? e.touches[0].clientX : e.clientX;
         const diff = currentX - startX.current;
         // Limit the displacement for a smooth effect
-        setDragOffset(Math.max(Math.min(diff / 10, 20), -20));
-    }, [isLocked]);
+        setDragOffset(Math.max(Math.min(diff / 8, 120), -120));
+    }, [isLocked, isDragging]);
 
     const handleEnd = useCallback(e => {
-        if (!isDragging.current || isLocked) return;
-        isDragging.current = false;
+        if (!isDragging || isLocked) return;
+        setIsDragging(false);
 
         const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
         const diff = endX - startX.current;
@@ -125,7 +125,7 @@ function useSliderLogic(data) {
             if (diff < 0) goToNext();
             else goToPrev();
         }
-    }, [isLocked, goToNext, goToPrev]);
+    }, [isLocked, isDragging, goToNext, goToPrev]);
 
     // === 4. Effects (Listeners) ===
 
@@ -133,13 +133,17 @@ function useSliderLogic(data) {
     useEffect(() => {
         const slider = sliderRef.current;
         if (!slider) return;
-        // Wrap handleTransitionEnd to check the event target
+
         const onTransitionEnd = e => {
-            if (e.target === slider) handleTransitionEnd();
+            if (e.target === slider) {
+                handleTransitionEnd();
+            }
         };
+
         slider.addEventListener('transitionend', onTransitionEnd);
+
         return () => slider.removeEventListener('transitionend', onTransitionEnd);
-    }, [handleTransitionEnd]);
+    }, [sliderRef, handleTransitionEnd]);
 
     // Effect for listening to mouse and touch events (drag/swipe)
     useEffect(() => {
@@ -177,7 +181,7 @@ function useSliderLogic(data) {
         isLocked,
         dragOffset,
         displayIndex,
-        isDragging: isDragging.current, // Return the current value of the reference
+        isDragging,
         goToNext,
         goToPrev,
         goToSlide,

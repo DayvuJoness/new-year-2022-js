@@ -7,9 +7,9 @@ import './styles/main.scss';
 import './styles/customization.scss'; 
 
 // --- Components ---
-import ScrollList from './components/ScrollList';       // ScrollList component (mobile)
-import Slider from './components/Slider';               // Slider component (desktop)
-import SectionTitle from './components/SectionTitle';   // Title component
+const ScrollList = React.lazy(() => import('./components/ScrollList')); // ScrollList component (mobile)
+const Slider = React.lazy(() => import('./components/Slider'));         // Slider component (desktop)
+import SectionTitle from './components/SectionTitle';                   // Title component
 
 import useMediaQuery from './utils/useMediaQuery';
 
@@ -43,11 +43,13 @@ function App() {
                     </p>
                 </div>
                 
-                {/* 1. Scroller (mobile) */}
-                {isMobile && <ScrollList listType="food" data={foodData} loading="eager" />}
-                
-                {/* 2. Slider (desktop) */}
-                {isDesktop && <Slider listType="food" data={foodData} loading="eager" />}
+                <React.Suspense fallback={<div className="loader">Загрузка...</div>}>      
+                    {/* 1. Scroller (mobile) */}
+                    {isMobile && <ScrollList listType="food" data={foodData} loading="eager" />}
+                    
+                    {/* 2. Slider (desktop) */}
+                    {isDesktop && <Slider listType="food" data={foodData} loading="eager" />}
+                </React.Suspense>
                 
                 <Decorations classNames="land__decor--arrow-down-red" />
             </section>
@@ -69,11 +71,13 @@ function App() {
                     </p>
                 </div>
 
-                {/* 1. Scroller (mobile) */}
-                {isMobile && <ScrollList listType="mood" data={moodData} />}
-                
-                {/* 2. Slider (desktop) */}
-                {isDesktop && <Slider listType="mood" data={moodData} />}
+                <React.Suspense fallback={<div className="loader">Загрузка...</div>}>
+                    {/* 1. Scroller (mobile) */}
+                    {isMobile && <ScrollList listType="mood" data={moodData} />}
+                    
+                    {/* 2. Slider (desktop) */}
+                    {isDesktop && <Slider listType="mood" data={moodData} />}
+                </React.Suspense>
                 
                 <Decorations classNames="land__decor--arrow-down-green" />
             </section>
@@ -97,11 +101,13 @@ function App() {
                     </p>
                 </div>
 
-                {/* 1. Scroller (mobile) */}
-                {isMobile && <ScrollList listType="gifts" data={giftsData} />}
-                
-                {/* 2. Slider (desktop) */}
-                {isDesktop && <Slider listType="gifts" data={giftsData} />}
+                <React.Suspense fallback={<div className="loader">Загрузка...</div>}>
+                    {/* 1. Scroller (mobile) */}
+                    {isMobile && <ScrollList listType="gifts" data={giftsData} />}
+                    
+                    {/* 2. Slider (desktop) */}
+                    {isDesktop && <Slider listType="gifts" data={giftsData} />}
+                </React.Suspense>
                 
                 <Decorations classNames="land__decor--nutcracker" />
                 <Decorations classNames="land__decor--arrow-down-red" />
@@ -128,8 +134,10 @@ function App() {
                 <div className="land__section__scroll-wrapper"> 
                     <Decorations classNames="land__decor--garland-left" />
                     
-                    {/* 1. Scroller (mobile & desktop) */}
-                    <ScrollList listType="suits" data={suitsData} /> 
+                    <React.Suspense fallback={<div className="loader">Загрузка...</div>}>
+                        {/* 1. Scroller (mobile & desktop) */}
+                        <ScrollList listType="suits" data={suitsData} /> 
+                    </React.Suspense>
                     
                     <Decorations classNames="land__decor--garland-right" />
                 </div>
