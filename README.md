@@ -59,6 +59,10 @@ src/
     └── useSliderLogic.js# Hook containing all the complex logic for the infinite slider (state, gestures, transitions)
 ```
 
+## Running the project visual
+
+The project visual is available at the link: [New Year 2022 JS React version](https://dayvujoness.github.io/new-year-2022-js/)
+
 ## ▶️ Getting Started
 
 To run this modern React application locally, follow these steps.
