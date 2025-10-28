@@ -1,5 +1,4 @@
 import React from 'react';
-import useMediaQuery from '../utils/useMediaQuery';
 import SectionTitle from './SectionTitle'; 
 
 // Dynamic Imports for Code Splitting
@@ -22,10 +21,12 @@ function Section({
     contentDecorations = [],    // Decorations inside the scroll-wrapper (for Suits only)
     hasBottomBg = false,
     hasBottomDecor = false,
-    useSlider = true            // Flag for the Suits section (ScrollList always)
+    useSlider = true,            // Flag for the Suits section (ScrollList always)
+    isMobile,
+    isDesktop,
+    isLoadingData = false,
 }) {
     // 1. The logic of adaptability
-    const isDesktop = useMediaQuery('(min-width: 768px)');
     
     // 2. Selecting a component
     let Component;
@@ -42,17 +43,20 @@ function Section({
     // 4. Additional wrapper rendering for Suits
     const needsScrollWrapper = contentDecorations.length > 0;
 
-    const content = (
-        <React.Suspense fallback={<div className="loader">Загрузка...</div>}>
-            {data.length > 0 && (
+    let content;
+    if (isLoadingData) {
+        content = <div className="loading-placeholder">Загрузка данных...</div>;
+    } else {
+        content = (
+            <React.Suspense fallback={<div className="loading-placeholder">Загрузка контента...</div>}>
                 <Component 
                     listType={sectionType} 
                     data={data} 
                     loading={finalLoading} 
                 />
-            )}
-        </React.Suspense>
-    );
+            </React.Suspense>
+        );
+    }
 
     return (
         <section className={`land__section land__section--${sectionType}`} id={id}>

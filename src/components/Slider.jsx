@@ -96,7 +96,12 @@ function Slider({ listType, data, loading }) {
                                     <div key={index} className={classes} style={slideStyle}>
                                         {/* Rendering each card within a slide */}
                                         {slideItems.map(card => (
-                                            <SliderCard key={card.id} {...card} tabIndexNumber={tabIndexValue} loading={loading} />
+                                            <SliderCard 
+                                                key={card.id} 
+                                                cardData={card}
+                                                tabIndexNumber={tabIndexValue} 
+                                                loading={loading} 
+                                            />
                                         ))}
                                     </div>
                                 );

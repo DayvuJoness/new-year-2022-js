@@ -18,21 +18,23 @@ import classNames from 'classnames';
  * @param {string} [props.tabIndexNumber] - Tab key focus index, -1 - excluding from focus for hidden slides
  * @param {string} [props.loading] - Loading strategy: 'eager' or 'lazy'
  */
-function SliderCard({ 
-    link, 
-    alt, 
-    srcMobile, 
-    srcDesktop, 
-    srcMobileWebp,
-    srcMobileAvif,
-    srcDesktopWebp, 
-    srcDesktopAvif,
-    sizeSlider, 
-    positionSlider, 
-    zIndex,
-    tabIndexNumber,
-    loading
-}) {
+
+function SliderCard({ cardData, loading }) { 
+    const { 
+        link, 
+        alt, 
+        srcMobile, 
+        srcDesktop,
+        srcMobileWebp, 
+        srcMobileAvif, 
+        srcDesktopWebp, 
+        srcDesktopAvif, 
+        sizeSlider, 
+        positionSlider, 
+        zIndex,
+        tabIndexNumber,
+    } = cardData;
+
     const classString = classNames(
         'slider__item',
         {

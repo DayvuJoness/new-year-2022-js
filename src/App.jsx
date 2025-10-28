@@ -28,17 +28,14 @@ function App() {
             setSectionData({ foodData: [], moodData: [], giftsData: [], suitsData: [] });
         });
     }, []); // Run it once
-
-    // 3. Loading display
-    if (!sectionData) {
-        return <div className="land"><div className="loader">Загрузка данных...</div></div>;
-    }
     
     // Destructuring the loaded data for use
-    const { foodData, moodData, giftsData, suitsData } = sectionData;
+    const { foodData, moodData, giftsData, suitsData } = sectionData || {};
+    const dataLoaded = !!sectionData;
 
     // 4. SECTION CONFIGURATION (using sectionData)
     const sectionsConfig = [
+        // food
         {
             id: 'food',
             sectionType: 'food',
@@ -50,7 +47,8 @@ function App() {
                     так и новыми волшебными гастрономическими открытиями!
                 </>
             ), 
-            data: foodData,
+            data: foodData || [],
+            isLoadingData: !dataLoaded,
             decorations: [
                 'land__decor--stars-left', 
                 'land__decor--stars-right', 
@@ -63,6 +61,7 @@ function App() {
             hasBottomDecor: false,
             useSlider: true,
         },
+        // mood
         {
             id: 'mood',
             sectionType: 'mood',
@@ -70,7 +69,7 @@ function App() {
             description: (
                 <>
                     Где скрывается новогоднее волшебство? Конечно, в подарках! 
-                    У нас вы легко найдёте всё, что ваши родные с радостью найдут под елкой!
+                    У нас вы легко найдёте всё, что ваши родные с радостью найдут под&nbsp;елкой!
                 </>
             ),
             data: moodData,
@@ -83,6 +82,7 @@ function App() {
             hasBottomDecor: false,
             useSlider: true,
         },
+        // gifts
         {
             id: 'gifts',
             sectionType: 'gifts',
@@ -107,6 +107,7 @@ function App() {
             hasBottomDecor: false,
             useSlider: true,
         },
+        // suits
         {
             id: 'suits',
             sectionType: 'suits',

@@ -16,17 +16,7 @@ function ScrollList({ listType, data, loading }) {
             {data.map((card) => (
                 <ScrollCard
                     key={card.id} 
-                    link={card.link}
-                    alt={card.alt}
-                    srcMobile={card.srcMobile} 
-                    srcMobileWebp={card.srcMobileWebp} 
-                    srcMobileAvif={card.srcMobileAvif} 
-                    srcDesktop={card.srcDesktop}
-                    srcDesktopWebp={card.srcDesktopWebp}
-                    srcDesktopAvif={card.srcDesktopAvif}
-                    size={card.size}
-                    position={card.position}
-                    zIndex={card.zIndex}
+                    cardData={card} 
                     loading={loading}
                 />
             ))}

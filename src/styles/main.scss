@@ -60,6 +60,7 @@ $breakpoint-max-mobile: 1100px;
 body {
     padding: 0;
     margin: 0;
+    overflow-x: hidden;
 }
 
 main {
@@ -95,9 +96,23 @@ main {
         box-sizing: border-box;
         width: 100vw;
 
+        .loading-placeholder
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         &--food {
             position: relative;
             z-index: 5;
+
+            .loading-placeholder
+            {
+                height: 468px;
+                margin: -10px 0 170px 0;
+                padding: 30px 0 10px 0;
+            }
         }
 
         &--mood {
@@ -106,12 +121,26 @@ main {
             background-color: $color-green;
             margin: -10vw 0 0 0;
             padding: 10vw 0 0 0;
+
+            .loading-placeholder
+            {
+                height: 468px;
+                margin: -10px 0 80px 0;
+                padding: 30px 0 10px 0;
+            }
         }
 
         &--gifts {
             position: relative;
             z-index: 3;
             padding: 50px 0 80px 0;
+
+            .loading-placeholder
+            {
+                height: 468px;
+                margin: -10px 0 80px 0;
+                padding: 30px 0 10px 0;
+            }
         }
 
         &--suits {
@@ -120,6 +149,13 @@ main {
             background-color: $color-green;
             margin: -10vw 0 0 0;
             padding: 10vw 0 0 0;
+
+            .loading-placeholder
+            {
+                height: 468px;
+                margin: -10px 0 20px 0;
+                padding: 30px 0 10px 0;
+            }
         }
 
         &__scroll-wrapper {
@@ -215,7 +251,7 @@ main {
             }
 
             .land__text__description {
-                width: 75%;
+                width: 81%;
                 max-width: 632px;
                 font-weight: 500;
             }
@@ -234,7 +270,7 @@ main {
             }
 
             .land__text__description {
-                width: 80%;
+                width: 82%;
                 max-width: 632px;
                 font-weight: 500;
             }
@@ -260,7 +296,7 @@ main {
         }
 
         &--gifts .land__text__description {
-            width: 75%;
+            width: 79%;
             max-width: 632px;
             font-weight: 500;
         }
@@ -387,16 +423,6 @@ main {
         }
     }
 
-    .loader
-    {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 466px;
-        margin: -10px 0 170px 0;
-        padding: 30px 0 10px 0;
-    }
-
     // mobile scroller
     .scroll-list {
         display: flex;
@@ -501,10 +527,59 @@ main {
         &__section {
             min-height: fit-content;
 
-            &--mood,
+            .loading-placeholder
+            {
+                width: 100%;
+            }
+
+            &--food {
+
+                .loading-placeholder
+                {
+                    height: 29vw;
+                    max-height: 500px;
+                    margin: calc( 30px + 1em) 0 calc( 150px + 1em ) 0;
+                    padding: 0;
+                }
+            }
+
+            &--mood {
+                margin: -3vw 0 0 0;
+                padding: 4vw 0 4vw 0;
+
+                .loading-placeholder
+                {
+                    height: 29vw;
+                    max-height: 500px;
+                    margin: calc( 30px + 1em) 0 calc( 50px + 1em ) 0;
+                    padding: 0;
+                }
+            }
+
+            &--gifts {
+
+                .loading-placeholder
+                {
+                    height: 29vw;
+                    max-height: 500px;
+                    margin: calc( 30px + 1em) 0 calc( 120px + 1em ) 0;
+                    padding: 0;
+                }
+            }
+
             &--suits {
                 margin: -3vw 0 0 0;
                 padding: 4vw 0 4vw 0;
+
+                .loading-placeholder
+                {
+                    height: 25vw;
+                    max-height: 493px;
+                    margin: calc( 0px + 0em) 0 calc( 100px + 0em ) 0;
+                    padding: 0;
+                    z-index: 1;
+                    background: linear-gradient(90deg, transparent, transparent, $color-green, $color-green, $color-green, transparent, transparent);
+                }
             }
         }
 
@@ -763,13 +838,6 @@ main {
                     }
                 }
             }
-        }
-
-        .loader
-        {
-            height: 29vw;
-            max-height: 500px;
-            margin: 46px 0 166px 0;
         }
 
         // desktop slider (visible)

@@ -17,20 +17,22 @@ import classNames from 'classnames';
  * @param {string} [props.zIndex] - Z-index modificator
  * @param {string} [props.loading] - Loading strategy: 'eager' or 'lazy'
  */
-function ScrollCard({ 
-    link, 
-    alt, 
-    srcMobile, 
-    srcDesktop,
-    srcMobileWebp, 
-    srcMobileAvif, 
-    srcDesktopWebp, 
-    srcDesktopAvif, 
-    size, 
-    position, 
-    zIndex,
-    loading
-}) {
+
+function ScrollCard({ cardData, loading }) { 
+    const { 
+        link, 
+        alt, 
+        srcMobile, 
+        srcDesktop,
+        srcMobileWebp, 
+        srcMobileAvif, 
+        srcDesktopWebp, 
+        srcDesktopAvif, 
+        size, 
+        position, 
+        zIndex,
+    } = cardData;
+
     const classString = classNames(
         'scroll-list__item',
         {
