@@ -85,6 +85,14 @@ main {
     text-rendering: optimizeLegibility;
     font-smooth: always;
 
+    .global-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+    }
+
     &__section {
         min-height: auto;
         position: relative;

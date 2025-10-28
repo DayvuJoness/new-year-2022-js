@@ -136,9 +136,13 @@ function App() {
 
     return (
         <div className="land">
-            {sectionsConfig.map((section) => (
-                <Section key={section.id} {...section} isMobile={isMobile} isDesktop={isDesktop} />
-            ))}
+            {!dataLoaded ? (
+                <div className="global-loading">Загрузка данных...</div> 
+            ) : (
+                sectionsConfig.map((section) => (
+                    <Section key={section.id} {...section} isMobile={isMobile} isDesktop={isDesktop} />
+                ))
+            )}
         </div>
     );
 }
